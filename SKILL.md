@@ -1,6 +1,6 @@
 ---
 name: dd-sdd
-description: Discovery–Delivery Spec-Driven Development — AI SDLC через спецификации. Два скилла: dd-discovery (читает контекст проекта и docs/specs/, ставит задачу в RFC в docs/rfc/), dd-delivery (реализует по RFC с тестами, обновляет docs/specs/, уносит RFC в архив).
+description: Discovery–Delivery Spec-Driven Development — AI SDLC через спецификации. Два скилла: dd-discovery (читает контекст проекта и docs/specs/, ставит задачу в RFC в docs/rfc/), dd-delivery (реализует по RFC с тестами, дописывает в RFC тест-инструкции, обновляет docs/specs/, уносит RFC в архив).
 trigger_phrases:
   - "dd-sdd"
   - "sdd"
@@ -27,12 +27,12 @@ AI SDLC: работа с фичами и изменениями через сп�
 
 ```
 dd-discovery            →            dd-delivery
-(контекст проекта + docs/specs/    (реализация по RFC, тесты,
- → задача в RFC в docs/rfc/)        обновление docs/specs/, архив RFC)
+(контекст проекта + docs/specs/    (реализация по RFC, тесты, тест-инструкции
+ → задача в RFC в docs/rfc/)        в RFC, обновление docs/specs/, архив RFC)
 ```
 
 1. **Discovery** — читаем контекст проекта и актуальные спеки, формулируем проблему, цели, состав решения и критерии приёмки → RFC в `docs/rfc/`
-2. **Delivery** — реализуем по RFC, покрываем тестами, приводим `docs/specs/` в соответствие с фактом, RFC уходит в `docs/rfc/archive/`
+2. **Delivery** — реализуем по RFC, покрываем тестами, дописываем в RFC раздел «Тест инструкции», приводим `docs/specs/` в соответствие с фактом, RFC уходит в `docs/rfc/archive/`
 
 Обратная связь из delivery возвращается в discovery: отклонения от RFC и находки становятся входом для следующей итерации.
 
@@ -41,7 +41,7 @@ dd-discovery            →            dd-delivery
 | Задача | Скилл | Инструкции |
 |--------|-------|------------|
 | Поставить задачу: контекст проекта → RFC | `dd-discovery` | [./skills/dd-discovery/SKILL.md](./skills/dd-discovery/SKILL.md) |
-| Реализовать по RFC: код, тесты, спеки, архив | `dd-delivery` | [./skills/dd-delivery/SKILL.md](./skills/dd-delivery/SKILL.md) |
+| Реализовать по RFC: код, тесты, тест-инструкции, спеки, архив | `dd-delivery` | [./skills/dd-delivery/SKILL.md](./skills/dd-delivery/SKILL.md) |
 
 ## Принцип компактности: RFC ≈ 1000 слов
 
@@ -67,6 +67,6 @@ RFC стараемся укладывать в ~1000 слов. Это ориен
 
 - «напиши RFC», «опиши фичу», «сделай спеку», «ТЗ», «поставь задачу» → **dd-discovery**
 - «начинаем делать», «реализуем по RFC», «возьми в работу» → **dd-delivery**
-- «завершаем», «фича готова», «перенеси в архив», «закрой спеку» → **dd-delivery** (шаги 7–8)
+- «завершаем», «фича готова», «перенеси в архив», «закрой спеку» → **dd-delivery** (шаги 8–9)
 
 Если непонятно, на каком этапе фича — посмотреть статус во frontmatter файла в `docs/rfc/`.
