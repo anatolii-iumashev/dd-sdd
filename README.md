@@ -4,6 +4,25 @@
 
 Навык для AI SDLC: полный цикл разработки с кодинг-агентом — от идеи до реализации и архивирования результатов, где единицей работы является не тикет, а спецификация.
 
+## Установка
+
+Через [skills.sh](https://www.skills.sh):
+
+```bash
+npx skills add https://github.com/anatolii-iumashev/dd-sdd --skill dd-sdd
+```
+
+Треки ставятся отдельно — они подключаются как навыки проекта и вызываются из `dd-sdd`:
+
+```bash
+npx skills add https://github.com/anatolii-iumashev/dd-sdd --skill dd-discovery
+npx skills add https://github.com/anatolii-iumashev/dd-sdd --skill dd-delivery
+```
+
+Без `--skill` команда покажет список навыков репозитория и предложит выбрать.
+
+После установки запустите `dd-sdd` — он проверит готовность проекта (см. «Перед стартом: preflight») и спросит, с какого трека начинать.
+
 ## Ключевые особенности
 
 ### 1. AI SDLC вместо «чата с ассистентом»
