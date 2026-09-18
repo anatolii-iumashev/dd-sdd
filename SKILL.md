@@ -130,7 +130,11 @@ RFC строится как результат декомпозиции, а не
 - Архив RFC: `docs/rfc/archive/<slug>.md`
 - Актуальные спеки: `docs/specs/<slug>.md`
 - `<slug>` — короткое имя фичи kebab-case, одинаковое на всех этапах цикла.
-- Статус жизненного цикла хранится во frontmatter RFC: `draft → review → approved → implementing → done`
+- Статус жизненного цикла хранится во frontmatter RFC: `draft → discovery → delivery → done`
+  - `draft` — RFC пишется, ещё не готов к ревью
+  - `discovery` — RFC готов, идёт ревью и согласование
+  - `delivery` — RFC взят в работу, идёт реализация
+  - `done` — реализовано, спеки обновлены, RFC уходит в архив
 
 ## Маршрутизация
 

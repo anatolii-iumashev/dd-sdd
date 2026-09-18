@@ -164,7 +164,7 @@ RFC может содержать раздел `## Предпосылки`. Ес
 ```yaml
 ---
 title: "<название фичи>"
-status: draft          # draft | review | approved | implementing | done
+status: draft # draft | discovery | delivery | done
 created: YYYY-MM-DD
 ---
 ```
@@ -181,5 +181,5 @@ created: YYYY-MM-DD
 Вывести готовый RFC в чат и предложить:
 
 - Внести правки
-- Отправить на ревью (перевести статус в `review`)
+- Отправить на ревью (перевести статус в `discovery`)
 - Начать реализацию → скилл **dd-delivery** (рекомендуется в чистой сессии)

@@ -1,6 +1,6 @@
 ---
 title: ""
-status: draft # draft | review | approved | implementing | done
+status: draft # draft | discovery | delivery | done
 created: YYYY-MM-DD
 ---
 
