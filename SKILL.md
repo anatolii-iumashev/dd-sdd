@@ -50,13 +50,13 @@ ls docs/rfc 2>/dev/null
 
 Каталог скиллов — тот, в котором установлен `dd-sdd` (`.agents/skills/` или `.claude/skills/`).
 
-| Что | Зачем нужно |
-|-----|-------------|
-| `AGENTS.md` (или `CLAUDE.md`) | контекст проекта для агента: стек, команды, конвенции. Без него RFC пишется «в вакууме» |
-| `docs/specs/` | актуальные спеки — вход discovery и выход delivery |
-| `docs/rfc/` | активные RFC — выход discovery и вход delivery |
-| `docs/rfc/archive/` | история принятых решений |
-| симлинки `dd-discovery`, `dd-delivery` в каталоге скиллов | без них треки не поднимаются по триггер-фразам |
+Что проверяем и зачем оно нужно:
+
+- `AGENTS.md` (или `CLAUDE.md`) — контекст проекта для агента: стек, команды, конвенции. Без него RFC пишется «в вакууме».
+- `docs/specs/` — актуальные спеки: вход discovery и выход delivery.
+- `docs/rfc/` — активные RFC: выход discovery и вход delivery.
+- `docs/rfc/archive/` — история принятых решений.
+- Симлинки `dd-discovery` и `dd-delivery` в каталоге скиллов — без них треки не поднимаются по триггер-фразам.
 
 ### Если чего-то нет
 
@@ -91,10 +91,15 @@ ln -s dd-sdd/skills/dd-delivery  .agents/skills/dd-delivery
 
 ## Скиллы
 
-| Задача | Скилл | Инструкции |
-|--------|-------|------------|
-| Поставить задачу: контекст проекта → RFC | `dd-discovery` | [./skills/dd-discovery/SKILL.md](./skills/dd-discovery/SKILL.md) |
-| Реализовать по RFC: код, тесты, тест-инструкции, спеки, архив | `dd-delivery` | [./skills/dd-delivery/SKILL.md](./skills/dd-delivery/SKILL.md) |
+### `dd-discovery` — поставить задачу
+
+Контекст проекта и `docs/specs/` → RFC в `docs/rfc/`.
+Инструкции: [./skills/dd-discovery/SKILL.md](./skills/dd-discovery/SKILL.md)
+
+### `dd-delivery` — реализовать по RFC
+
+Код, тесты, тест-инструкции, обновление спек, архив RFC.
+Инструкции: [./skills/dd-delivery/SKILL.md](./skills/dd-delivery/SKILL.md)
 
 ## Принцип компактности: RFC ≈ 3000 слов
 
