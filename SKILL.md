@@ -1,6 +1,6 @@
 ---
 name: dd-sdd
-description: Discovery–Delivery Spec-Driven Development — AI SDLC через спецификации. Два скилла: dd-discovery (читает контекст проекта и docs/specs/, декомпозирует решение по MECE и пирамиде Минто, ставит задачу в RFC в docs/rfc/), dd-delivery (реализует по RFC с тестами, дописывает в RFC тест-инструкции, обновляет docs/specs/, уносит RFC в архив).
+description: Discovery–Delivery Spec-Driven Development — AI SDLC через спецификации. При запуске проверяет готовность проекта (AGENTS.md, docs/rfc/, docs/specs/, симлинки треков) и спрашивает, с какого трека начинать. Два скилла: dd-discovery (читает контекст проекта и docs/specs/, декомпозирует решение по MECE и пирамиде Минто, ставит задачу в RFC в docs/rfc/), dd-delivery (реализует по RFC с тестами, дописывает в RFC тест-инструкции, обновляет docs/specs/, уносит RFC в архив).
 trigger_phrases:
   - "dd-sdd"
   - "sdd"
@@ -35,6 +35,59 @@ dd-discovery            →            dd-delivery
 2. **Delivery** — реализуем по RFC, покрываем тестами, дописываем в RFC раздел «Тест инструкции», приводим `docs/specs/` в соответствие с фактом, RFC уходит в `docs/rfc/archive/`
 
 Обратная связь из delivery возвращается в discovery: отклонения от RFC и находки становятся входом для следующей итерации.
+
+## Шаг 0. Preflight: проверить готовность проекта
+
+При запуске `dd-sdd` — до вопросов по фиче — проверить, что в проекте есть всё, на что опирается цикл:
+
+```bash
+for p in AGENTS.md CLAUDE.md docs/specs docs/rfc docs/rfc/archive \
+         .agents/skills/dd-discovery .agents/skills/dd-delivery; do
+  [ -e "$p" ] && echo "есть  $p" || echo "НЕТ   $p"
+done
+ls docs/rfc 2>/dev/null
+```
+
+Каталог скиллов — тот, в котором установлен `dd-sdd` (`.agents/skills/` или `.claude/skills/`).
+
+| Что | Зачем нужно |
+|-----|-------------|
+| `AGENTS.md` (или `CLAUDE.md`) | контекст проекта для агента: стек, команды, конвенции. Без него RFC пишется «в вакууме» |
+| `docs/specs/` | актуальные спеки — вход discovery и выход delivery |
+| `docs/rfc/` | активные RFC — выход discovery и вход delivery |
+| `docs/rfc/archive/` | история принятых решений |
+| симлинки `dd-discovery`, `dd-delivery` в каталоге скиллов | без них треки не поднимаются по триггер-фразам |
+
+### Если чего-то нет
+
+Молча не создавать. Показать одним сообщением, чего не хватает и почему это нужно, и предложить команды:
+
+```bash
+mkdir -p docs/rfc/archive docs/specs
+ln -s dd-sdd/skills/dd-discovery .agents/skills/dd-discovery
+ln -s dd-sdd/skills/dd-delivery  .agents/skills/dd-delivery
+```
+
+`AGENTS.md` шаблоном не создаётся: предложить собрать его по проекту (стек, как запускать, как тестировать, конвенции) — это отдельная работа, которую пользователь подтверждает явно.
+
+Ничего из этого не блокер:
+
+- нет симлинков — треки читаются по относительным путям `./skills/dd-discovery/SKILL.md` и `./skills/dd-delivery/SKILL.md`;
+- пустые `docs/specs/` и `docs/rfc/` — нормальное состояние нового проекта;
+- нет `AGENTS.md` — контекст собираем из кода, но в RFC отмечаем, что проектного контекста не было.
+
+Пользователь отказался что-то заводить — продолжаем, повторно не предлагаем.
+
+### Если всё на месте
+
+Показать, что лежит в `docs/rfc/` (slug + `status` из frontmatter), и спросить, с какого трека начинаем:
+
+- **Discovery** — пишем RFC на новую фичу → `dd-discovery`
+- **Delivery** — реализуем существующий RFC → `dd-delivery`
+
+Активных RFC нет — delivery начинать не с чего, предлагать только discovery. Активных RFC несколько — сразу уточнить, какой берём в работу.
+
+Пользователь уже назвал трек в первом сообщении («напиши RFC», «делаем по RFC») — не переспрашивать: сделать preflight и сразу передать в нужный скилл.
 
 ## Скиллы
 
@@ -75,6 +128,8 @@ RFC строится как результат декомпозиции, а не
 - Статус жизненного цикла хранится во frontmatter RFC: `draft → review → approved → implementing → done`
 
 ## Маршрутизация
+
+Сначала — preflight (шаг 0), затем трек:
 
 - «напиши RFC», «опиши фичу», «сделай спеку», «ТЗ», «поставь задачу» → **dd-discovery**
 - «начинаем делать», «реализуем по RFC», «возьми в работу» → **dd-delivery**
