@@ -1,0 +1,50 @@
+# Code-Review Shared Constraints
+
+Read `shared-agent-constraints.md` (same folder) first — it applies in full. The following are code-review addendums.
+
+Every finding must be anchored in the provided diff hunks; the one step outside them is the Structural-Neighbor Scope Expansion, with the carve-out below.
+
+## All Agents Exclude (additions)
+
+- Speculative input-dependent issues without a reachable input and a concrete failure path; reproducible boundary, null, and injection defects remain in scope
+- Pre-existing issues in unchanged code (unless security/bug directly adjacent to changed lines)
+- **Add-complexity suggestions without a specific bug or guideline.** Any finding whose suggested fix would *add* code (new helpers, abstractions, validation, branches, files, or net-add LOC) must cite either (a) a specific bug or security issue it prevents, at any severity, or (b) an explicit project guideline rule it satisfies. Otherwise omit — code that is already simple is a valid outcome. Prefer findings that remove complexity over findings that add it. This blocks "could be more thorough / more abstracted / more defensive" suggestions, not legitimate fixes for real defects.
+
+## Scope-expansion carve-out
+
+The base "Structural-Neighbor Scope Expansion" procedure applies, with one carve-out: cross-file consistency findings are allowed **even when the related file is outside the original scope** — an explicit exception to the pre-existing-code exclusion above. If the consistency fix would *add* a pattern to the related file rather than remove one, the Add-complexity bar still applies — and verify that the target file's APIs/dependencies actually support the pattern before reporting (never propose "use flag `--X` on tool `Y`" without evidence that `Y` accepts `--X`).
+
+## Output format (all agents)
+
+Report each finding in this exact shape. Every agent uses `Current:`/`Suggested:` — never `Code:`/`Fix:`:
+
+- **File:** file:line
+- **Category:** [agent-specific — see your prompt file]
+- **Confidence:** High | Medium | Low — report a Low as Low; never round it up to Medium or drop the finding.
+- **Guideline:** [exact project-doc rule, "General: <domain>", or for Intent Mismatch the literal `Intent (see Intent claim)`]
+- **Intent claim:** [Intent Mismatch only — the quoted claim from `## Intent`]
+- **Issue:** [concrete description]
+- **Current:** [relevant snippet — max 5 lines]
+- **Suggested:** [fix or recommendation — max 5 lines]
+
+## Intent-vs-Implementation Check (PR/MR mode only)
+
+When a PR/MR Context Block is present in your prompt **and** the description includes a populated `## Intent` section (one or more of Problem / Scope / Non-goals / Key decisions filled in), also check whether the diff delivers each claim **within your lane**. These findings use **Category: `Intent Mismatch`**.
+
+**Flag:**
+
+- A claim with no supporting code change (e.g., Intent says "rate-limit reset requests to 3 per hour per email" but the diff has no rate-limiting middleware or counter).
+- A code change that contradicts a stated non-goal (e.g., Non-goals says "no schema migration in this PR" but the diff adds a migration file).
+- An implementation delivering the wrong shape of the claim (e.g., Intent says "validate email format" but the code only checks for a non-empty string).
+
+**Confidence:** High — the claim is specific and testable and the diff clearly does not deliver it (or contradicts it); Medium — the claim is approximate or only partially delivered; Low — you could not confirm whether the diff delivers it.
+
+**Severity** (agents with a Severity field): Critical — a stated non-goal is contradicted; Warning — a stated scope claim has no supporting code; Suggestion — partial match.
+
+**Skip silently** when: there is no populated `## Intent` section — **never invent intent** from the Summary, commit messages, or diff; the claim is ambiguous or aspirational (e.g., "improve performance" with no metric) — omit rather than flag; or the claim is already satisfied elsewhere in the codebase — verify with Grep/Read before flagging.
+
+**Budget:** Intent Mismatch findings do not count against the base 15-finding cap — up to **+5 per agent per pass**. This is the composing category the base Finding Cap allows for.
+
+**Fix the code, never the PR description.** A suggested fix MUST edit code (or tests, or config — anything that ships in the diff) to deliver the stated intent. Never propose updating the PR description to match the code — that silently rewrites the author's stated intent and defeats the check. If you are confident the intent itself is wrong, write in `Suggested:` that *"the author should reconsider the stated intent"* instead.
+
+**Lane.** Report Intent Mismatch findings only for claims inside the lane your own prompt names, and leave claims outside it to the agent that owns them.
