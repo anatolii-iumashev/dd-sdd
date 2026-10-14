@@ -1,0 +1,4 @@
+# Codex reads this file; other harnesses read the skill's own frontmatter/invocation rules.
+# Both say the same thing: this skill runs only when the user invokes it.
+policy:
+  allow_implicit_invocation: false
