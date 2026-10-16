@@ -11,6 +11,7 @@ Read the project docs listed below. Every finding cites the specific rule it vio
 ## Focus Areas
 
 - Explicit violations of rules in the loaded project docs
+- Deviations from behavior documented in the project specs (`docs/specs/*`) — unless the same diff updates the spec accordingly
 - Testing convention violations per the project's testing docs
 - Styling convention violations per the project's styling docs
 
